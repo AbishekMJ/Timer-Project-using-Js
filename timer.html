@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>document</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            text-align: center;
+       
+            background-color: #000;
+        }
+        .container {
+            text-align: center;
+            color: #fff;
+            width: 100%;
+           
+        }
+    .timer-display {
+    font-size: 5rem;
+ 
+    background-color:black;
+    padding: 10px;
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.session {
+    font-size: 1rem;
+   background-color:rgba(255, 235, 205, 0.199);
+    padding: 10px;
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.close session {
+    font-size: 1rem;
+   background-color:rgba(255, 235, 205, 0.199);
+    padding: 10px;
+    width: 100%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+        .control-panel {
+            display: flex;
+            justify-content: space-between;
+            
+            background-color: #333;
+            padding: 10px 0;
+        }
+        .control-panel button, 
+        .buttons button {
+            width: 30%;
+            height: 70px;
+            font-size: 1.5rem;
+            color: #fff;
+            border: none;
+           
+           
+           
+
+        }
+        .control-panel span {
+            font-size: 2rem;
+            color: #fff;
+        
+        }
+        #session-increment, #session-decrement,
+        #break-increment, #break-decrement {
+            background-color: #007BFF;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        #reset {
+            background-color: #FFA500;
+            width: 50%;
+        }
+        #start_stop {
+            background-color: #28A745;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="timer-display" id="timer">25:00</div>
+        <div class ="session" id="tsession"> SESSION LENGTH</div>
+        <div class="control-panel">
+
+            <button id="session-decrement">-</button>
+            <span id="session-length">25</span>
+        <button id="session-increment">+</button>
+        </div>
+        <div class ="close session" id="csession"> SESSION LENGTH</div>
+        <div class="control-panel">
+            <button id="break-decrement">-</button>
+            <span id="break-length">5</span>
+            <button id="break-increment">+</button>
+        </div>
+        <div class="buttons">
+            <button id="reset">Reset</button>
+            <button id="start_stop">Start</button>
+        </div>
+    </div>
+
+    <script>
+        let sessionLength = 25;
+        let breakLength = 5;
+        let timer = document.getElementById('timer');
+        let interval;
+        let isRunning = false;
+
+        document.getElementById('session-increment').addEventListener('click', () => {
+            if (sessionLength < 60) {
+                sessionLength++;
+                document.getElementById('session-length').innerText = sessionLength;
+                updateTimer();
+            }
+        });
+
+        document.getElementById('session-decrement').addEventListener('click', () => {
+            if (sessionLength > 1) {
+                sessionLength--;
+                document.getElementById('session-length').innerText = sessionLength;
+                updateTimer();
+            }
+        });
+
+        document.getElementById('break-increment').addEventListener('click', () => {
+            if (breakLength < 60) {
+                breakLength++;
+                document.getElementById('break-length').innerText = breakLength;
+            }
+        });
+
+        document.getElementById('break-decrement').addEventListener('click', () => {
+            if (breakLength > 1) {
+                breakLength--;
+                document.getElementById('break-length').innerText = breakLength;
+            }
+        });
+
+        document.getElementById('start_stop').addEventListener('click', () => {
+            if (isRunning) {
+                clearInterval(interval);
+                isRunning = false;
+                document.getElementById('start_stop').innerText = 'Start';
+            } else {
+                interval = setInterval(startTimer, 1000);
+                isRunning = true;
+                document.getElementById('start_stop').innerText = 'Stop';
+            }
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            clearInterval(interval);
+            isRunning = false;
+            sessionLength = 25;
+            breakLength = 5;
+            document.getElementById('session-length').innerText = sessionLength;
+            document.getElementById('break-length').innerText = breakLength;
+            updateTimer();
+            document.getElementById('start_stop').innerText = 'Start';
+        });
+
+        function updateTimer() {
+            timer.innerText = `${sessionLength < 10 ? '0' : ''}${sessionLength}:00`;
+        }
+
+        function startTimer() {
+            let currentTime = timer.innerText.split(':');
+            let minutes = parseInt(currentTime[0]);
+            let seconds = parseInt(currentTime[1]);
+
+            if (seconds === 0) {
+                if (minutes === 0) {
+                    clearInterval(interval);
+                } else {
+                    minutes--;
+                    seconds = 59;
+                }
+            } else {
+                seconds--;
+            }
+
+            timer.innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+    </script>
+</body>
+</html>
